@@ -16,6 +16,40 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
+// Auto-changing subtitle
+const subtitles = [
+    "Building digital experiences one line of code at a time",
+    "Aspiring Game & Full-Stack Developer",
+    "IT Student & Web Developer",
+    "Creating efficient and practical solutions",
+    "Passionate about learning new technologies",
+    "Exploring AI integration in development"
+];
+
+let currentSubtitleIndex = 0;
+const subtitleElement = document.getElementById('changing-subtitle');
+
+function changeSubtitle() {
+    if (subtitleElement) {
+        // Fade out
+        subtitleElement.style.opacity = '0';
+        
+        setTimeout(() => {
+            // Change text
+            currentSubtitleIndex = (currentSubtitleIndex + 1) % subtitles.length;
+            subtitleElement.textContent = subtitles[currentSubtitleIndex];
+            
+            // Fade in
+            subtitleElement.style.opacity = '1';
+        }, 300);
+    }
+}
+
+// Change subtitle every 3 seconds (3000ms)
+if (subtitleElement) {
+    setInterval(changeSubtitle, 3000);
+}
+
 // Hamburger menu toggle
 const hamburger = document.querySelector('.hamburger');
 const navLinks = document.querySelector('.nav-links');
@@ -147,7 +181,6 @@ if (contactForm) {
         e.preventDefault();
         
         const formData = new FormData(contactForm);
-        const name = formData.get('name');
         const email = formData.get('email');
         const message = formData.get('message');
         
@@ -159,7 +192,7 @@ if (contactForm) {
         
         try {
             // Using FormSubmit.co - a free form backend service
-            // Replace with your own email or use a different service
+            // Messages will be sent to bestudiobrian@gmail.com
             const response = await fetch('https://formsubmit.co/ajax/bestudiobrian@gmail.com', {
                 method: 'POST',
                 headers: {
@@ -167,10 +200,9 @@ if (contactForm) {
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    name: name,
                     email: email,
                     message: message,
-                    _subject: `Portfolio Contact from ${name}`,
+                    _subject: `Portfolio Contact from ${email}`,
                     _template: 'table'
                 })
             });
@@ -196,3 +228,21 @@ if (contactForm) {
         }
     });
 }
+
+// Back to Top Button
+const backToTopBtn = document.getElementById('backToTop');
+
+window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+        backToTopBtn.classList.add('show');
+    } else {
+        backToTopBtn.classList.remove('show');
+    }
+});
+
+backToTopBtn.addEventListener('click', () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+});
