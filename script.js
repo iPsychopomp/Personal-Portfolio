@@ -246,3 +246,26 @@ backToTopBtn.addEventListener('click', () => {
         behavior: 'smooth'
     });
 });
+
+// Copy Email to Clipboard
+function copyEmail() {
+    const email = 'bestudiobrian@gmail.com';
+    const tooltip = document.getElementById('copy-tooltip');
+    
+    // Copy to clipboard
+    navigator.clipboard.writeText(email).then(() => {
+        // Show tooltip
+        tooltip.style.opacity = '1';
+        tooltip.style.visibility = 'visible';
+        
+        // Hide tooltip after 2 seconds
+        setTimeout(() => {
+            tooltip.style.opacity = '0';
+            tooltip.style.visibility = 'hidden';
+        }, 2000);
+    }).catch(err => {
+        console.error('Failed to copy email:', err);
+        // Fallback: show alert
+        alert('Email: bestudiobrian@gmail.com');
+    });
+}
