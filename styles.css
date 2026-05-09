@@ -437,8 +437,8 @@ body.dark-mode .slider::before {
     display: block;
 }
 
-.social-btn.indeed svg {
-    color: #2557a7;
+.social-btn.linkedin svg {
+    color: #0077b5;
 }
 
 .social-btn.linkedin svg {
@@ -487,8 +487,8 @@ body.dark-mode .cta-button {
     transform: translateY(0);
 }
 
-.social-btn.indeed svg {
-    color: #2557a7;
+.social-btn.linkedin svg {
+    color: #0077b5;
 }
 
 .social-btn.linkedin svg {
