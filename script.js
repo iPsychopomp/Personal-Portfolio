@@ -172,7 +172,7 @@ window.addEventListener('scroll', () => {
     }, 10);
 });
 
-// Contact Form Handler
+// Contact Form Handler with Formspree
 const contactForm = document.getElementById('contact-form');
 const formStatus = document.getElementById('form-status');
 
@@ -191,33 +191,31 @@ if (contactForm) {
         submitBtn.disabled = true;
         
         try {
-            // Using FormSubmit.co - a free form backend service
-            // Messages will be sent to bestudiobrian@gmail.com
-            const response = await fetch('https://formsubmit.co/ajax/bestudiobrian@gmail.com', {
+            // Send to Formspree
+            const response = await fetch('https://formspree.io/f/xzdwqjgn', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
-                body: JSON.stringify({
-                    email: email,
-                    message: message,
-                    _subject: `Portfolio Contact from ${email}`,
-                    _template: 'table'
-                })
+                body: formData
             });
             
             if (response.ok) {
+                // Success - Clear form and show message
                 formStatus.textContent = '✓ Message sent successfully! I\'ll get back to you soon.';
                 formStatus.className = 'form-status success';
-                contactForm.reset();
+                formStatus.style.display = 'block';
+                contactForm.reset(); // Clear the form fields
             } else {
                 throw new Error('Form submission failed');
             }
         } catch (error) {
-            formStatus.textContent = '✗ Oops! Something went wrong. Please email me directly at bestudiobrian@gmail.com';
+            // Error - Show error message
+            formStatus.textContent = '✗ Oops! Something went wrong. Please try again or email me directly.';
             formStatus.className = 'form-status error';
+            formStatus.style.display = 'block';
         } finally {
+            // Re-enable submit button
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
             

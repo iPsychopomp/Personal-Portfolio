@@ -149,7 +149,7 @@
         <div class="container">
             <h2><span class="retro-text">Let's Work Together</span></h2>
             <div class="contact-form-wrapper">
-                <form class="contact-form" action="https://formspree.io/f/xzdwqjgn" method="POST">
+                <form class="contact-form" id="contact-form">
                     <div class="form-group">
                         <label for="email">Your Email</label>
                         <input type="email" id="email" name="email" placeholder="Email..." required>
@@ -159,6 +159,7 @@
                         <textarea id="message" name="message" rows="6" placeholder="Message..." required></textarea>
                     </div>
                     <button type="submit" class="submit-btn">MESSAGE ME</button>
+                    <div class="form-status" id="form-status"></div>
                 </form>
                 <div class="contact-info">
                     <p>Or reach out directly:</p>
