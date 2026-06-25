@@ -159,12 +159,10 @@
                         <textarea id="message" name="message" rows="6" placeholder="Message..." required></textarea>
                     </div>
                     <button type="submit" class="submit-btn">MESSAGE ME</button>
-                    <div class="form-status" id="form-status"></div>
                 </form>
                 <div class="contact-info">
                     <p>Or reach out directly:</p>
                     <button class="contact-direct" id="copy-email" onclick="copyEmail()">bestudiobrian@gmail.com</button>
-                    <span class="copy-tooltip" id="copy-tooltip">✓ Copied!</span>
                 </div>
             </div>
         </div>
@@ -181,6 +179,9 @@
             <polyline points="18 15 12 9 6 15"></polyline>
         </svg>
     </button>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toast-container"></div>
 
     <script src="script.js"></script>
 </body>

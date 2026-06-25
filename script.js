@@ -172,17 +172,67 @@ window.addEventListener('scroll', () => {
     }, 10);
 });
 
+// Toast Notification System with Max Toast Limit
+let activeToasts = [];
+const MAX_TOASTS = 3; // Industry standard: max 3 toasts at once
+
+function showToast(message, type = 'success') {
+    const toastContainer = document.getElementById('toast-container');
+    
+    // Remove oldest toast if we have too many
+    if (activeToasts.length >= MAX_TOASTS) {
+        const oldestToast = activeToasts[0];
+        oldestToast.classList.add('fade-out');
+        setTimeout(() => oldestToast.remove(), 300);
+        activeToasts.shift();
+    }
+    
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    
+    // Toast content
+    toast.innerHTML = `
+        <div class="toast-icon">${type === 'success' ? '✓' : '✗'}</div>
+        <div class="toast-message">${message}</div>
+        <button class="toast-close" onclick="closeToast(this)">×</button>
+        <div class="toast-progress"></div>
+    `;
+    
+    // Add to container and track it
+    toastContainer.appendChild(toast);
+    activeToasts.push(toast);
+    
+    // Auto-remove after 4 seconds
+    setTimeout(() => {
+        if (toast.parentElement) {
+            toast.classList.add('fade-out');
+            setTimeout(() => {
+                toast.remove();
+                activeToasts = activeToasts.filter(t => t !== toast);
+            }, 300);
+        }
+    }, 4000);
+}
+
+// Close toast manually
+function closeToast(button) {
+    const toast = button.parentElement;
+    toast.classList.add('fade-out');
+    setTimeout(() => {
+        toast.remove();
+        activeToasts = activeToasts.filter(t => t !== toast);
+    }, 300);
+}
+
 // Contact Form Handler with Formspree
 const contactForm = document.getElementById('contact-form');
-const formStatus = document.getElementById('form-status');
 
 if (contactForm) {
     contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
         const formData = new FormData(contactForm);
-        const email = formData.get('email');
-        const message = formData.get('message');
         
         // Disable submit button
         const submitBtn = contactForm.querySelector('.submit-btn');
@@ -201,28 +251,19 @@ if (contactForm) {
             });
             
             if (response.ok) {
-                // Success - Clear form and show message
-                formStatus.textContent = '✓ Message sent successfully! I\'ll get back to you soon.';
-                formStatus.className = 'form-status success';
-                formStatus.style.display = 'block';
+                // Success - Show toast and clear form
+                showToast("Message sent successfully! I'll get back to you soon.", 'success');
                 contactForm.reset(); // Clear the form fields
             } else {
                 throw new Error('Form submission failed');
             }
         } catch (error) {
-            // Error - Show error message
-            formStatus.textContent = '✗ Oops! Something went wrong. Please try again or email me directly.';
-            formStatus.className = 'form-status error';
-            formStatus.style.display = 'block';
+            // Error - Show error toast
+            showToast('Oops! Something went wrong. Please try again or email me directly.', 'error');
         } finally {
             // Re-enable submit button
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
-            
-            // Hide status message after 5 seconds
-            setTimeout(() => {
-                formStatus.style.display = 'none';
-            }, 5000);
         }
     });
 }
@@ -245,22 +286,26 @@ backToTopBtn.addEventListener('click', () => {
     });
 });
 
-// Copy Email to Clipboard
+// Copy Email with Rate Limiting (Anti-Spam)
+let lastCopyTime = 0;
+const COPY_COOLDOWN = 2000; // 2 seconds cooldown between copies
+
 function copyEmail() {
+    const now = Date.now();
+    
+    // Check if we're still in cooldown period (spam prevention)
+    if (now - lastCopyTime < COPY_COOLDOWN) {
+        // Silently ignore spam clicks
+        return;
+    }
+    
+    lastCopyTime = now;
     const email = 'bestudiobrian@gmail.com';
-    const tooltip = document.getElementById('copy-tooltip');
     
     // Copy to clipboard
     navigator.clipboard.writeText(email).then(() => {
-        // Show tooltip
-        tooltip.style.opacity = '1';
-        tooltip.style.visibility = 'visible';
-        
-        // Hide tooltip after 2 seconds
-        setTimeout(() => {
-            tooltip.style.opacity = '0';
-            tooltip.style.visibility = 'hidden';
-        }, 2000);
+        // Show success toast
+        showToast('Email copied to clipboard!', 'success');
     }).catch(err => {
         console.error('Failed to copy email:', err);
         // Fallback: show alert
